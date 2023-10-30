@@ -4,32 +4,33 @@ public class App {
     public static void main(String[] args) throws Exception {
         Scanner input = new Scanner(System.in);
 
-        String username = "kelompok3";
-        String password= "1234";
-        String inputUsername;
-        String inputPassword;
+        String[] username = {"User1", "Gabriel", "Mera", "Chiko"};
+        String[] password = {"1111", "2222", "3333", "4444"};
+
+        String inputUsername, inputPassword;
+        int hasil = -1;
 
         System.out.println("=====Selamat Datang Di Sistem Booking Apart=====");
         System.out.println("Silahkan login terlebih dahulu");
         System.out.println("================================================");
-        System.out.println("Masukkan Username: ");
+
+        System.out.print("Masukkan Username: ");
         inputUsername = input.nextLine();
-        System.out.println("Masukkan Password: ");
+        System.out.print("Masukkan Password: ");
         inputPassword = input.nextLine();
         
-        if (inputUsername.equals("username")) {
-            System.out.print("Masukkan password anda : ");
-            String inputpassword = input.nextLine();
-
-            if (inputpassword.equals("password")) {
-                System.out.println("Selamat masuk ke system");
-            } else {
-                System.out.println("Peringatan password anda salah!");
+        for (int i = 0; i < username.length; i++) {
+            if(username[i].equalsIgnoreCase(inputUsername)){
+                hasil = i;
+                break;
             }
-        } else {
-            System.out.println("Peringatan username anda salah!");
         }
 
+        if (hasil == -1) {
+            System.out.println("Username tidak ditemukan");
+        } else {
+            System.out.println("Berhasil Login");
+        }
 
         int hargapermalam, jmlmalam, biayatambahan, totalbiaya;
 
