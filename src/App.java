@@ -1,119 +1,185 @@
 import java.util.Scanner;
 
-public class App {
-    public static void main(String[] args) throws Exception {
+public class App{
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        String[] username = {"User1", "Gabriel", "Mera", "Chiko"};
-        String[] password = {"1111", "2222", "3333", "4444"};
-
-        String inputUsername, inputPassword;
-        int hasil = -1;
+        // Array 2 dimensi untuk menyimpan informasi pemesanan kamar
+        String[][] bookings = new String[4][7]; // Maksimal 4 pengguna, dan 7 informasi pemesanan per pengguna
+        String[] usernames = {"User1", "Gabriel", "Mera", "Chika"};
 
         System.out.println("=====Selamat Datang Di Sistem Booking Apart=====");
         System.out.println("Silahkan login terlebih dahulu");
         System.out.println("================================================");
-
         System.out.print("Masukkan Username: ");
-        inputUsername = input.nextLine();
-        System.out.print("Masukkan Password: ");
-        inputPassword = input.nextLine();
-        
-        for (int i = 0; i < username.length; i++) {
-            if(username[i].equalsIgnoreCase(inputUsername)){
-                hasil = i;
+        String key = input.nextLine();
+
+        boolean found = false;
+        int userIndex = -1; // Indeks pengguna yang sedang login
+        for (int i = 0; i < usernames.length; i++) {
+            if (usernames[i].equals(key)) {
+                found = true;
+                userIndex = i;
                 break;
             }
         }
 
-        if (hasil == -1) {
-            System.out.println("Username tidak ditemukan");
+        if (found) {
+            System.out.print("Masukkan password anda: ");
+            String password = input.nextLine();
+
+            if ((key.equals("User1") || key.equals("Gabriel") || key.equals("Mera")) && password.equals("123")) {
+                System.out.println("Selamat masuk ke sistem");
+            } else {
+                System.out.println("Peringatan password anda salah!");
+                return;
+            }
         } else {
-            System.out.println("Berhasil Login");
+            System.out.println("Peringatan username anda salah!");
+            return;
         }
 
-        int hargapermalam, jmlmalam, biayatambahan, totalbiaya;
+        int hargapermalam = 0, jmlmalam, biayatambahan, totalbiaya;
 
-        
         System.out.println("Tipe Kamar");
         System.out.println("1 : Studio (Rp.100000)");
         System.out.println("2 : Duplex (Rp.150000)");
-        System.out.println("3 : Triplex (Rp.200.000)");
+        System.out.println("3 : Triplex (Rp.200000)");
         System.out.print("Masukkan tipe kamar yang diinginkan: ");
-
         int tipekamar = input.nextInt();
 
-        System.out.print("Masukkan jumlah malam yang diinginkan: " );
-        jmlmalam = input.nextInt();
-
-       switch (tipekamar) {
-        case 1:
-            totalbiaya = jmlmalam * 100000;
-
-            System.out.print("Ingin tambahan fasilitas (1: Laundry, 2: Sarapan, 3: Tidak ada)? ");
-                int tambahan1 = input.nextInt();
-                
-                if (tambahan1 == 1) {
-                    biayatambahan = 20000 * jmlmalam; // Biaya laundry
-                    totalbiaya += biayatambahan;
-                    System.out.println("Biaya laundry: Rp." + biayatambahan);
-                } else if (tambahan1 == 2) {
-                    biayatambahan = 25000 * jmlmalam; // Biaya sarapan
-                    totalbiaya += biayatambahan;
-                    System.out.println("Biaya sarapan: Rp." + biayatambahan);
+        System.out.print("Masukkan jumlah malam yang diinginkan: ");
+        while (true) {
+            if (input.hasNextInt()) {
+                jmlmalam = input.nextInt();
+                if (jmlmalam > 0) {
+                    break; // Keluar dari perulangan jika input valid
                 } else {
-                    System.out.println("Tidak ada tambahan fasilitas.");
+                    System.out.println("Jumlah malam harus lebih dari 0. Silakan coba lagi.");
                 }
+            } else {
+                System.out.print("Masukkan angka yang valid: ");
+                input.next(); // Hapus token tidak valid dari input
+            }
+        }
 
-            System.out.println("Harga yang harus dibayarkan adalah " + totalbiaya);
-            break;
+        // Menghitung total biaya berdasarkan tipe kamar
+        switch (tipekamar) {
+            case 1:
+                bookings[userIndex][0] = "Kamar Tipe Studio";
+                hargapermalam = 100000;
+                break;
+            case 2:
+                bookings[userIndex][0] = "Kamar Tipe Duplex";
+                hargapermalam = 150000;
+                break;
+            case 3:
+                bookings[userIndex][0] = "Kamar Tipe Triplex";
+                hargapermalam = 200000;
+                break;
+            default:
+                System.out.println("Tipe kamar tidak valid.");
+                return;
+        }
 
-        case 2:
-            totalbiaya = jmlmalam * 150000;
+        bookings[userIndex][1] = "Jumlah Malam: " + jmlmalam;
 
-            System.out.print("Ingin tambahan fasilitas (1: Laundry, 2: Sarapan, 3: Tidak ada)? ");
-                int tambahan2 = input.nextInt();
-                
-                if (tambahan2 == 1) {
-                    biayatambahan = 20000 * jmlmalam; // Biaya laundry
-                    totalbiaya += biayatambahan;
-                    System.out.println("Biaya laundry: Rp." + biayatambahan);
-                } else if (tambahan2 == 2) {
-                    biayatambahan = 25000 * jmlmalam; // Biaya sarapan
-                    totalbiaya += biayatambahan;
-                    System.out.println("Biaya sarapan: Rp." + biayatambahan);
+        totalbiaya = jmlmalam * hargapermalam;
+
+        // Memproses tambahan fasilitas
+        System.out.print("Ingin tambahan fasilitas (1: Laundry, 2: Sarapan, 3: Tidak ada)? ");
+        int tambahan = input.nextInt();
+        if (tambahan == 1) {
+            biayatambahan = 20000 * jmlmalam; // Biaya laundry
+            totalbiaya += biayatambahan;
+            bookings[userIndex][2] = "Biaya laundry: Rp." + biayatambahan;
+        } else if (tambahan == 2) {
+            biayatambahan = 25000 * jmlmalam; // Biaya sarapan
+            totalbiaya += biayatambahan;
+            bookings[userIndex][2] = "Biaya sarapan: Rp." + biayatambahan;
+        } else if (tambahan != 3) {
+            System.out.println("Tambahan fasilitas tidak valid.");
+            return;
+        }
+
+        System.out.println("Harga yang harus dibayarkan adalah " + totalbiaya);
+
+        // Pemberian Rating dan Ulasan
+        System.out.print("Beri rating (1-5): ");
+        int rating = input.nextInt();
+        if (rating >= 1 && rating <= 5) {
+            bookings[userIndex][3] = "Rating: " + rating;
+            input.nextLine(); // Menghapus karakter newline dari input sebelumnya
+            System.out.print("Tulis ulasan: ");
+            String ulasan = input.nextLine();
+            bookings[userIndex][4] = "Ulasan: " + ulasan;
+        } else {
+            System.out.println("Rating tidak valid.");
+            return;
+        }
+
+        System.out.println("Pilih Opsi Pembayaran:");
+        System.out.println("1. Cash");
+        System.out.println("2. Transfer Bank");
+        System.out.print("Masukkan Pilihan Pembayaran: ");
+        int paymentChoice = input.nextInt();
+        input.nextLine();
+
+        switch (paymentChoice) {
+            case 1:
+                bookings[userIndex][5] = "Pembayaran: Cash";
+                break;
+            case 2:
+                bookings[userIndex][5] = "Pembayaran: Transfer Bank";
+                break;
+            default:
+                System.out.println("Pilihan Pembayaran tidak valid.");
+                return;
+        }
+
+        // Assuming you have a statusPemesanan variable declared elsewhere
+        String statusPemesanan = "Dipesan";
+        System.out.println("Status Pemesanan: " + statusPemesanan);
+
+        // Lanjutkan dengan kode promo
+        boolean promoAktif = false;
+        while (true) {
+            System.out.print("Apakah Anda ingin mengaktifkan promo? (Ya/Tidak): ");
+            String promoChoice = input.next();
+            if (promoChoice.equalsIgnoreCase("Ya") || promoChoice.equalsIgnoreCase("Tidak")) {
+                if (promoChoice.equalsIgnoreCase("Ya")) {
+                    System.out.print("Berapa jumlah malam yang Anda pesan? ");
+                    int jmlMalam = input.nextInt();
+                    if (jmlMalam >= 3) {
+                        double diskon = 0.1; // 10% diskon
+                        totalbiaya -= (totalbiaya * diskon);
+                        System.out.println("Anda mendapatkan diskon sebesar 10%.");
+                    }
+                    promoAktif = true;
+                    break;
                 } else {
-                    System.out.println("Tidak ada tambahan fasilitas.");
+                    break;
                 }
+            } else {
+                System.out.println("Masukkan pilihan yang valid (Ya/Tidak).");
+            }
+        }
 
+        if (promoAktif) {
+            bookings[userIndex][6] = "Total biaya setelah promo: Rp." + totalbiaya;
+        }
 
-            System.out.println("Harga yang harus dibayarkan adalah " + totalbiaya);
-            break;
+        // Print konfirmasi booking information
+        System.out.println("Konfirmasi Pemesanan:");
+        System.out.println("Username: " + usernames[userIndex]);
+        System.out.println("Tipe Kamar: " + bookings[userIndex][0]);
+        System.out.println(bookings[userIndex][1]);
+        System.out.println(bookings[userIndex][2]);
+        System.out.println(bookings[userIndex][3]);
+        System.out.println(bookings[userIndex][4]);
+        System.out.println(bookings[userIndex][5]);
 
-        case 3:
-            totalbiaya = jmlmalam * 200000;
-
-            System.out.print("Ingin tambahan fasilitas (1: Laundry, 2: Sarapan, 3: Tidak ada)? ");
-                int tambahan3 = input.nextInt();
-                
-                if (tambahan3 == 1) {
-                    biayatambahan = 20000 * jmlmalam; // Biaya laundry
-                    totalbiaya += biayatambahan;
-                    System.out.println("Biaya laundry: Rp." + biayatambahan);
-                } else if (tambahan3 == 2) {
-                    biayatambahan = 25000 * jmlmalam; // Biaya sarapan
-                    totalbiaya += biayatambahan;
-                    System.out.println("Biaya sarapan: Rp." + biayatambahan);
-                } else {
-                    System.out.println("Tidak ada tambahan fasilitas.");
-                }
-
-
-            System.out.println("Harga yang harus dibayarkan adalah " + totalbiaya);
-            break;
-       
-        default:
-            break;
-       }
+        System.out.println("Pemesanan berhasil!");
+        System.out.println("Status Pemesanan: " + statusPemesanan);
     }
 }
