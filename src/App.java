@@ -6,37 +6,39 @@ public class App{
 
         // Array 2 dimensi untuk menyimpan informasi pemesanan kamar
         String[][] bookings = new String[4][7]; // Maksimal 4 pengguna, dan 7 informasi pemesanan per pengguna
-        String[] usernames = {"User1", "Gabriel", "Mera", "Chika"};
+        String[] usernames = {"User1", "Gabriel", "Mera", "Chika"}; // array untuk pengguna
 
-        System.out.println("=====Selamat Datang Di Sistem Booking Apart=====");
-        System.out.println("Silahkan login terlebih dahulu");
-        System.out.println("================================================");
-        System.out.print("Masukkan Username: ");
-        String key = input.nextLine();
+        System.out.println("=====     Selamat Datang Di Sistem Booking Apartment     =====");
+        System.out.println("===========Silahkan login terlebih dahulu===========");
+        System.out.println("====================================================");
 
         boolean found = false;
         int userIndex = -1; // Indeks pengguna yang sedang login
-        for (int i = 0; i < usernames.length; i++) {
-            if (usernames[i].equals(key)) {
-                found = true;
-                userIndex = i;
-                break;
+        while (true) {
+            System.out.print("Masukkan Username: ");
+            String key = input.nextLine();
+
+            boolean y = false;
+            for (int i = 0; i < usernames.length; i++) {
+                if (usernames[i].equals(key)) {
+                    found = true;
+                    userIndex = i;
+                    break;
+                }
             }
-        }
+            if (true) {
+                System.out.print("Masukkan password anda: ");
+                String password = input.nextLine();
 
-        if (found) {
-            System.out.print("Masukkan password anda: ");
-            String password = input.nextLine();
-
-            if ((key.equals("User1") || key.equals("Gabriel") || key.equals("Mera")) && password.equals("123")) {
-                System.out.println("Selamat masuk ke sistem");
+                if (password.equals("123")) {
+                    System.out.println("Selamat masuk ke sistem");
+                    break; // Keluar dari perulangan while setelah login berhasil
+                } else {
+                    System.out.println("Peringatan password anda salah!");
+                }
             } else {
-                System.out.println("Peringatan password anda salah!");
-                return;
+                System.out.println("Peringatan username anda salah!");
             }
-        } else {
-            System.out.println("Peringatan username anda salah!");
-            return;
         }
 
         int hargapermalam = 0, jmlmalam, biayatambahan, totalbiaya;
@@ -87,7 +89,11 @@ public class App{
         totalbiaya = jmlmalam * hargapermalam;
 
         // Memproses tambahan fasilitas
-        System.out.print("Ingin tambahan fasilitas (1: Laundry, 2: Sarapan, 3: Tidak ada)? ");
+        System.out.println("Fasilitas Tambahan");
+        System.out.println("1. Laundry");
+        System.out.println("2. Sarapan");
+        System.out.println("3. Tidak Ada");
+        System.out.print("Masukan Fasilitas Tambahan yang diinginkan: ");
         int tambahan = input.nextInt();
         if (tambahan == 1) {
             biayatambahan = 20000 * jmlmalam; // Biaya laundry
